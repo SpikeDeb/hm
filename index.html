@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HealthMate – Doctors & Medical Shops Directory</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#f2f6fa;--surface:#fff;--ink:#10243a;--muted:#587087;--primary:#1357a6;--on-primary:#fff;--tint:#e4eefa;--line:#d3dde8;--ok:#1b7a52;--ok-tint:#e1f4ea;--wa:#1a9d52;--head:#10243a;--on-head:#fff;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1522;--surface:#122033;--ink:#e6eef7;--muted:#97aac0;--primary:#6aa6f0;--on-primary:#0b1522;--tint:#1a2f4a;--line:#25384f;--ok:#5fd09b;--ok-tint:#14352a;--wa:#3ccf7c;--head:#0e1b2c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0b1522;--surface:#122033;--ink:#e6eef7;--muted:#97aac0;--primary:#6aa6f0;--on-primary:#0b1522;--tint:#1a2f4a;--line:#25384f;--ok:#5fd09b;--ok-tint:#14352a;--wa:#3ccf7c;--head:#0e1b2c;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5;font-size:16px}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px}
+header{background:var(--head);color:var(--on-head);padding:22px 0 20px}
+header h1{margin:0;font-size:1.6rem;font-weight:700;line-height:1.25}
+header p{margin:6px 0 0;opacity:.8;max-width:56ch}
+.filters{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:16px;display:grid;gap:12px}
+.row{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+label{display:block;font-size:.82rem;color:var(--muted);margin-bottom:4px;font-weight:500}
+select,input[type=date],input[type=search]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-height:44px}
+select:focus-visible,input:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.tabs button{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:9px 14px;min-height:44px}
+.seg button[aria-pressed=true],.tabs button[aria-selected=true]{background:var(--primary);color:var(--on-primary);border-color:var(--primary);font-weight:600}
+.tabs{display:flex;gap:8px;margin:18px 0 6px}
+.tabs button{flex:1;max-width:220px;font-weight:600}
+.meta{color:var(--muted);font-size:.9rem;margin:10px 0}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(min(100%,420px),1fr))}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.card h3{margin:0;font-size:1.15rem;line-height:1.3}
+.spec{display:inline-block;background:var(--tint);color:var(--primary);border-radius:4px;padding:1px 8px;font-size:.85rem;font-weight:600;margin-top:4px}
+.qual{color:var(--muted);font-size:.9rem;margin:2px 0 0}
+.clinic{border-left:3px solid var(--line);padding:2px 0 2px 12px;display:grid;gap:6px}
+.clinic.on{border-left-color:var(--ok)}
+.clinic b{font-size:1rem}
+.addr,.time{font-size:.9rem;color:var(--muted)}
+.time{color:var(--ink);font-weight:500}
+.days{display:flex;gap:4px;flex-wrap:wrap}
+.d{min-width:40px;text-align:center;font-size:.8rem;padding:2px 0;border-radius:4px;border:1px solid var(--line);color:var(--muted);opacity:.6}
+.d.y{background:var(--tint);color:var(--primary);border-color:transparent;opacity:1;font-weight:600}
+.d.sel{background:var(--ok);color:var(--on-primary);border-color:var(--ok);opacity:1}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-weight:600;border-radius:8px;padding:9px 14px;min-height:44px;font-size:.95rem;border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+.btn.wa{background:var(--wa);border-color:var(--wa);color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.wa{color:#08130d}}
+:root[data-theme="dark"] .btn.wa{color:#08130d}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:28px 18px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--ink);margin-bottom:4px}
+.badge{font-size:.8rem;font-weight:600;color:var(--ok);background:var(--ok-tint);border-radius:4px;padding:1px 8px;margin-left:6px;white-space:nowrap}
+footer{margin:32px 0 24px;padding-top:16px;border-top:1px solid var(--line);color:var(--muted);font-size:.9rem;display:grid;gap:10px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>HealthMate</h1>
+    <p>Find doctors, clinic timings and medical shops in your city in one place, and book directly on WhatsApp.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="filters" aria-label="Search">
+    <div class="row">
+      <div><label for="city">Select city</label><select id="city"></select></div>
+      <div id="specBox"><label for="spec">Speciality</label><select id="spec"></select></div>
+      <div><label for="q">Search by name</label><input id="q" type="search" placeholder="Doctor or shop name"></div>
+    </div>
+    <div class="row" id="dateRow">
+      <div><label for="date">Select date</label><input id="date" type="date"></div>
+      <div>
+        <label>Show</label>
+        <div class="seg" role="group" aria-label="Display mode">
+          <button type="button" id="mDate" aria-pressed="true">Doctors on selected date</button>
+          <button type="button" id="mAll" aria-pressed="false">All days</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" id="tDoc" aria-selected="true">Doctors</button>
+    <button type="button" role="tab" id="tShop" aria-selected="false">Medical shops</button>
+  </div>
+
+  <p class="meta" id="meta" aria-live="polite"></p>
+  <div class="grid" id="list"></div>
+
+  <footer>
+    <div>Want to list your clinic or medical shop here? Message us on WhatsApp.</div>
+    <div class="btns"><a class="btn wa" id="addUs" target="_blank" rel="noopener">Request listing on WhatsApp</a></div>
+    <div>Note: The data shown here is sample data. Real doctors, timings and numbers will be added later.</div>
+  </footer>
+</main>
+
+<script>
+const DAYS=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const ADMIN_WA="919000000000";
+const DATA={
+ cities:["Dharmanagar","Kailashahar","Agartala","Kumarghat"],
+ doctors:[
+  {n:"Dr. R. Sharma",s:"General Physician",q:"MBBS, MD",c:"Dharmanagar",p:"919000000001",cl:[
+    {n:"Sharma Clinic",a:"Main Road, Bazaar Chowk",d:[1,2,3,4,5],t:"10:00 AM – 1:00 PM"},
+    {n:"City Care Hospital",a:"Station Road",d:[6],t:"5:00 PM – 8:00 PM"}]},
+  {n:"Dr. Sunita Verma",s:"Gynaecologist",q:"MBBS, DGO",c:"Dharmanagar",p:"919000000002",cl:[
+    {n:"Matru Seva Clinic",a:"Gandhi Nagar",d:[1,3,5],t:"4:00 PM – 7:00 PM"},
+    {n:"Shanti Nursing Home",a:"College Road",d:[0],t:"11:00 AM – 1:00 PM"}]},
+  {n:"Dr. Amit Gupta",s:"Paediatrician",q:"MBBS, MD (Paediatrics)",c:"Dharmanagar",p:"919000000003",cl:[
+    {n:"Nanhe Kadam Child Clinic",a:"College Road",d:[1,2,4,6],t:"11:00 AM – 2:00 PM"}]},
+  {n:"Dr. Neha Singh",s:"Dermatologist",q:"MBBS, MD (Dermatology)",c:"Kailashahar",p:"919000000004",cl:[
+    {n:"Skin Care Centre",a:"Nehru Market",d:[2,4,6],t:"3:00 PM – 6:00 PM"}]},
+  {n:"Dr. Vikas Rai",s:"Orthopaedic Surgeon",q:"MBBS, MS (Ortho)",c:"Kailashahar",p:"919000000005",cl:[
+    {n:"Rai Ortho Clinic",a:"Hospital Road",d:[1,3,5],t:"9:00 AM – 12:00 PM"},
+    {n:"Life Line Hospital",a:"Near Bus Stand",d:[6],t:"2:00 PM – 5:00 PM"}]},
+  {n:"Dr. Priya Das",s:"Dentist",q:"BDS, MDS",c:"Kailashahar",p:"919000000006",cl:[
+    {n:"Muskaan Dental Clinic",a:"Post Office Road",d:[1,2,3,4,5,6],t:"10:00 AM – 2:00 PM"}]},
+  {n:"Dr. Mohan Lal",s:"General Physician",q:"MBBS",c:"Agartala",p:"919000000007",cl:[
+    {n:"Lal Clinic",a:"Sabzi Mandi Road",d:[1,2,3,4,5,6],t:"9:00 AM – 12:00 PM"},
+    {n:"Lal Clinic (Evening)",a:"Sabzi Mandi Road",d:[1,2,3,4,5],t:"6:00 PM – 8:00 PM"}]},
+  {n:"Dr. Anjali Mehta",s:"Ophthalmologist",q:"MBBS, MS (Ophthalmology)",c:"Agartala",p:"919000000008",cl:[
+    {n:"Drishti Eye Care",a:"Main Chowk",d:[2,4],t:"11:00 AM – 3:00 PM"}]},
+  {n:"Dr. Rahul Dey",s:"General Physician",q:"MBBS",c:"Kumarghat",p:"919000000009",cl:[
+    {n:"Dey Clinic",a:"Station Road",d:[1,2,3,4,5,6],t:"10:00 AM – 1:00 PM"}]},
+  {n:"Dr. Rina Paul",s:"Paediatrician",q:"MBBS, DCH",c:"Kumarghat",p:"919000000010",cl:[
+    {n:"Shishu Care Clinic",a:"Market Road",d:[2,4,6],t:"4:00 PM – 7:00 PM"}]}
+ ],
+ shops:[
+  {n:"Jan Seva Medical Store",c:"Dharmanagar",a:"Main Road, Bazaar Chowk",p:"919100000001",t:"8:00 AM – 10:00 PM",h24:false},
+  {n:"Life Care Pharmacy",c:"Dharmanagar",a:"Station Road",p:"919100000002",t:"Open 24 hours",h24:true},
+  {n:"Arogya Medical Hall",c:"Kailashahar",a:"Nehru Market",p:"919100000003",t:"9:00 AM – 9:30 PM",h24:false},
+  {n:"Sanjeevani Medical",c:"Kailashahar",a:"Hospital Road",p:"919100000004",t:"Open 24 hours",h24:true},
+  {n:"Shubh Medical Agency",c:"Agartala",a:"Sabzi Mandi Road",p:"919100000005",t:"8:30 AM – 9:00 PM",h24:false},
+  {n:"Navjeevan Pharmacy",c:"Agartala",a:"Main Chowk",p:"919100000006",t:"9:00 AM – 10:00 PM",h24:false},
+  {n:"Kumarghat Medical Hall",c:"Kumarghat",a:"Station Road",p:"919100000007",t:"8:00 AM – 9:30 PM",h24:false},
+  {n:"Care Plus Pharmacy",c:"Kumarghat",a:"Market Road",p:"919100000008",t:"Open 24 hours",h24:true}
+ ]
+};
+
+const $=id=>document.getElementById(id);
+const st={tab:"doc",all:false};
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+const show=n=>n.replace(/^91/,"").replace(/(\d{5})(\d{5})/,"$1 $2");
+const wa=(num,msg)=>"https://wa.me/"+num+"?text="+encodeURIComponent(msg);
+const dateLabel=d=>{try{return d.toLocaleDateString("en-IN",{weekday:"long",day:"numeric",month:"long"})}catch(e){return iso(d)}};
+const pickedDate=()=>{const v=$("date").value;return v?new Date(v+"T00:00:00"):new Date()};
+
+function init(){
+  $("city").innerHTML=DATA.cities.map(c=>`<option>${c}</option>`).join("");
+  const specs=[...new Set(DATA.doctors.map(d=>d.s))].sort();
+  $("spec").innerHTML='<option value="">All specialities</option>'+specs.map(s=>`<option>${s}</option>`).join("");
+  $("date").value=iso(new Date());
+  $("addUs").href=wa(ADMIN_WA,"Hello, I would like to list my clinic or medical shop on HealthMate.");
+  ["city","spec","date"].forEach(i=>$(i).addEventListener("change",render));
+  $("q").addEventListener("input",render);
+  $("mDate").onclick=()=>setMode(false);
+  $("mAll").onclick=()=>setMode(true);
+  $("tDoc").onclick=()=>setTab("doc");
+  $("tShop").onclick=()=>setTab("shop");
+  render();
+}
+function setMode(all){
+  st.all=all;
+  $("mDate").setAttribute("aria-pressed",String(!all));
+  $("mAll").setAttribute("aria-pressed",String(all));
+  render();
+}
+function setTab(t){
+  st.tab=t;
+  $("tDoc").setAttribute("aria-selected",String(t==="doc"));
+  $("tShop").setAttribute("aria-selected",String(t==="shop"));
+  $("specBox").style.display=t==="doc"?"":"none";
+  $("dateRow").style.display=t==="doc"?"":"none";
+  render();
+}
+function render(){
+  st.tab==="doc"?renderDoctors():renderShops();
+}
+function renderDoctors(){
+  const city=$("city").value,spec=$("spec").value,q=$("q").value.trim().toLowerCase();
+  const dt=pickedDate(),wd=dt.getDay();
+  let out=[];
+  DATA.doctors.forEach(d=>{
+    if(d.c!==city||(spec&&d.s!==spec)||(q&&!d.n.toLowerCase().includes(q)))return;
+    const clinics=st.all?d.cl:d.cl.filter(c=>c.d.includes(wd));
+    if(clinics.length)out.push({d,clinics});
+  });
+  $("meta").textContent=out.length
+    ?`${out.length} doctor${out.length>1?"s":""} in ${city}${st.all?"":" – available on "+dateLabel(dt)}`
+    :"";
+  if(!out.length){
+    $("list").innerHTML=`<div class="empty"><b>${st.all?"No doctors found":"No doctors available on this date"}</b>${st.all?"Try another city or speciality.":"Pick another date, or press “All days” to see the full schedule."}</div>`;
+    return;
+  }
+  $("list").innerHTML=out.map(({d,clinics})=>`
+    <article class="card">
+      <div><h3>${d.n}</h3><span class="spec">${d.s}</span><p class="qual">${d.q}</p></div>
+      ${clinics.map(c=>{
+        const on=c.d.includes(wd);
+        const msg=`Hello, I would like to book an appointment with ${d.n} (${c.n}) on ${dateLabel(dt)}.`;
+        return `<div class="clinic${on?" on":""}">
+          <b>${c.n}${on&&!st.all?'<span class="badge">Available on this date</span>':""}</b>
+          <span class="addr">${c.a}</span>
+          <div class="days" aria-label="Days available">${DAYS.map((n,i)=>`<span class="d${c.d.includes(i)?" y":""}${i===wd&&c.d.includes(i)?" sel":""}">${n}</span>`).join("")}</div>
+          <span class="time">${c.t}</span>
+          <div class="btns"><a class="btn wa" target="_blank" rel="noopener" href="${wa(d.p,msg)}">Book on WhatsApp</a></div>
+        </div>`}).join("")}
+      <div class="btns"><a class="btn" href="tel:+${d.p}">Call · ${show(d.p)}</a></div>
+    </article>`).join("");
+}
+function renderShops(){
+  const city=$("city").value,q=$("q").value.trim().toLowerCase();
+  const out=DATA.shops.filter(s=>s.c===city&&(!q||s.n.toLowerCase().includes(q)));
+  $("meta").textContent=out.length?`${out.length} medical shop${out.length>1?"s":""} in ${city}`:"";
+  if(!out.length){
+    $("list").innerHTML='<div class="empty"><b>No medical shops found</b>Try another city.</div>';
+    return;
+  }
+  $("list").innerHTML=out.map(s=>`
+    <article class="card">
+      <div><h3>${s.n}${s.h24?'<span class="badge">24 hours</span>':""}</h3><p class="addr">${s.a}</p></div>
+      <span class="time">${s.t}</span>
+      <div class="btns">
+        <a class="btn" href="tel:+${s.p}">Call · ${show(s.p)}</a>
+        <a class="btn wa" target="_blank" rel="noopener" href="${wa(s.p,"Hello, I would like to order some medicines.")}">Order on WhatsApp</a>
+      </div>
+    </article>`).join("");
+}
+init();
+</script>
+</body>
+</html>
